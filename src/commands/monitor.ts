@@ -9,7 +9,7 @@ import * as fs from 'node:fs'
 import ora, {Ora} from 'ora'
 
 const bedrockModel = new Bedrock({
-  maxTokens: 300,
+  maxTokens: 150,
   model: 'anthropic.claude-v2',
   region: 'us-east-1',
   stopSequences: [],
@@ -80,19 +80,27 @@ export default class Monitor extends Command {
   }
 
   private async filterAndLogErrors(content: string): Promise<void> {
+    let maxTimestamp = this.lastLogTimestamp || 0
+
     const newEntries = content
       .split('\n')
       .filter(Boolean)
       .filter((line) => {
         const logTimestamp = new Date(line.split('|')[0]).getTime()
         if (this.lastLogTimestamp && logTimestamp <= this.lastLogTimestamp) return false
-        this.lastLogTimestamp = logTimestamp
+
+        if (logTimestamp > maxTimestamp) {
+          maxTimestamp = logTimestamp
+        }
+
         return true
       })
 
     if (newEntries.length > 0) {
       await this.logProcessor.processLogs(newEntries)
     }
+
+    this.lastLogTimestamp = maxTimestamp // Update timestamp after processing all entries
   }
 
   private processNewLogEntries(filePath: string): void {
@@ -155,26 +163,26 @@ class LogProcessor {
     }
   }
 
+  private addSeparator(): void {
+    console.log('\n' + '-'.repeat(50) + '\n')
+  }
+
   private generateHash(log: string): string {
     return crypto.createHash('md5').update(log).digest('hex')
   }
 
   private async getBedrockInsight(log: string): Promise<string> {
-    this.spinner.text = 'Processing error...'
-    this.spinner.start()
-
     const errorKey = log.split('error :')[1]?.trim() || log
     if (this.errorCache.has(errorKey)) {
-      this.spinner.stop()
       return this.errorCache.get(errorKey)!
     }
 
     try {
+      this.addSeparator()
       this.log(`Invoking Bedrock with: ${log}`)
       const response = await bedrockModel.invoke(
-        `Human: got error ${log} \n what does this mean and what should I do? \n\n Assistant:`,
+        `Human: got error ${log} \n what does this mean and what should I do? \n keep the response concise \n\n Assistant:`,
       )
-      this.spinner.stop()
 
       this.errorCache.set(errorKey, response)
       if (this.errorCache.size > 5) {
@@ -183,7 +191,6 @@ class LogProcessor {
 
       return response
     } catch (error) {
-      this.spinner.fail('Failed processing error.')
       this.log(`Error in invoking Bedrock: ${error}`)
       return log
     }
@@ -196,12 +203,19 @@ class LogProcessor {
   private async processBatch(): Promise<void> {
     if (this.errorFound) {
       const errors = this.batch.filter((log) => log.includes('|error :'))
+      this.spinner.start()
 
       for (const err of errors) {
+        this.spinner.text = `Processing error: ${err}`
+
+        // Fetching error insight one-by-one
         // eslint-disable-next-line no-await-in-loop
         const insight = await this.getBedrockInsight(`Error detected: ${err}`)
+        this.addSeparator()
         this.log(insight)
       }
+
+      this.spinner.stop()
     }
   }
 
