@@ -9,7 +9,7 @@
     "@aws-sdk/types": "^3.433.0",
     "@oclif/core": "^3",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^3.7.0",
+    "@oclif/plugin-plugins": "^3.9.3",
     "@smithy/eventstream-codec": "^2.0.12",
     "@smithy/protocol-http": "^3.0.8",
     "@smithy/signature-v4": "^2.0.12",
