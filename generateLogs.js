@@ -9,10 +9,13 @@ const logFilePath = `./${DateTime.now().toFormat('yyyy-MM-dd')}.log`
 
 const writeError = (errorMessage, faultMessage) => {
   const timeStamp = DateTime.now().toISO()
-  fs.appendFileSync(logFilePath, `${timeStamp}|${errorMessage}\n`)
+  const currentContent = fs.existsSync(logFilePath) ? fs.readFileSync(logFilePath, 'utf8') : ''
+  let newContent = `${currentContent}${timeStamp}|${errorMessage}\n`
   if (faultMessage) {
-    fs.appendFileSync(logFilePath, `${faultMessage}\n`)
+    newContent += `${faultMessage}\n`
   }
+
+  fs.writeFileSync(logFilePath, newContent)
 }
 
 const generateLogs = () => {
@@ -61,10 +64,10 @@ const generateLogs = () => {
 
               console.log(`Logs generated in ${logFilePath}`)
             }, 500)
-          }, 500)
-        }, 1000)
-      }, 1000)
-    }, 1000)
+          }, 5)
+        }, 5)
+      }, 9000)
+    }, 2000)
   }, 1000)
 }
 

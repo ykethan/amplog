@@ -39,9 +39,7 @@ export default class Monitor extends Command {
   }
 
   private lastFileSize = 0
-  private lastLogTimestamp: null | number = null
   private logProcessor = new LogProcessor(this.log.bind(this))
-  private processing = false
 
   public async run(): Promise<void> {
     const {flags} = await this.parse(Monitor)
@@ -67,7 +65,8 @@ export default class Monitor extends Command {
 
     const debouncedProcess = debounce(() => {
       this.processNewLogEntries(logFilePath)
-    }, 5000)
+      // eslint-disable-next-line unicorn/numeric-separators-style
+    }, 10000)
 
     watcher
       .on('add', (path) => {
@@ -80,27 +79,11 @@ export default class Monitor extends Command {
   }
 
   private async filterAndLogErrors(content: string): Promise<void> {
-    let maxTimestamp = this.lastLogTimestamp || 0
-
-    const newEntries = content
-      .split('\n')
-      .filter(Boolean)
-      .filter((line) => {
-        const logTimestamp = new Date(line.split('|')[0]).getTime()
-        if (this.lastLogTimestamp && logTimestamp <= this.lastLogTimestamp) return false
-
-        if (logTimestamp > maxTimestamp) {
-          maxTimestamp = logTimestamp
-        }
-
-        return true
-      })
+    const newEntries = content.split('\n').filter(Boolean)
 
     if (newEntries.length > 0) {
       await this.logProcessor.processLogs(newEntries)
     }
-
-    this.lastLogTimestamp = maxTimestamp // Update timestamp after processing all entries
   }
 
   private processNewLogEntries(filePath: string): void {
@@ -142,24 +125,19 @@ class LogProcessor {
   public async processLogs(logs: string[]): Promise<void> {
     for (const log of logs) {
       const logHash = this.generateHash(log)
-      if (this.isStartCommand(log) && this.batch.length > 0) {
-        // eslint-disable-next-line no-await-in-loop
-        await this.processBatch()
-        this.resetBatch()
+      if (log.includes('|error :')) {
+        this.errorFound = true
       }
 
       if (!this.seenLogs.has(logHash)) {
         this.seenLogs.add(logHash)
         this.batch.push(log)
-
-        if (log.includes('|error :')) {
-          this.errorFound = true
-        }
       }
     }
 
     if (this.batch.length > 0) {
       await this.processBatch()
+      this.resetBatch()
     }
   }
 
@@ -178,8 +156,6 @@ class LogProcessor {
     }
 
     try {
-      this.addSeparator()
-      this.log(`Invoking Bedrock with: ${log}`)
       const response = await bedrockModel.invoke(
         `Human: got error ${log} \n what does this mean and what should I do? \n keep the response concise \n\n Assistant:`,
       )
@@ -196,27 +172,22 @@ class LogProcessor {
     }
   }
 
-  private isStartCommand(log: string): boolean {
-    return log.includes('amplify status core') || log.includes('amplify codegen') || log.includes('amplify push core')
-  }
-
   private async processBatch(): Promise<void> {
-    if (this.errorFound) {
-      const errors = this.batch.filter((log) => log.includes('|error :'))
-      this.spinner.start()
+    const errors = this.batch.filter((log) => log.includes('|error :'))
+    for (const err of errors) {
+      this.addSeparator()
+      this.spinner.start(`Processing error: ${err}`)
+      this.log('\nInvoking Bedrock with: Error detected: ' + err + '\n')
 
-      for (const err of errors) {
-        this.spinner.text = `Processing error: ${err}`
-
-        // Fetching error insight one-by-one
-        // eslint-disable-next-line no-await-in-loop
-        const insight = await this.getBedrockInsight(`Error detected: ${err}`)
-        this.addSeparator()
-        this.log(insight)
-      }
+      // Fetching error insight one-by-one
+      // eslint-disable-next-line no-await-in-loop
+      const insight = await this.getBedrockInsight(`Error detected: ${err}`)
 
       this.spinner.stop()
+      this.log(insight)
     }
+
+    this.resetBatch()
   }
 
   private resetBatch(): void {
