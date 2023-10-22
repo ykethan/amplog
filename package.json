@@ -15,7 +15,7 @@
     "@smithy/signature-v4": "^2.0.12",
     "@smithy/util-utf8": "^2.0.0",
     "chokidar": "^3.5.3",
-    "langchain": "^0.0.169",
+    "langchain": "^0.0.170",
     "lodash": "^4.17.21",
     "luxon": "^3.4.3",
     "ora": "^7.0.1"
