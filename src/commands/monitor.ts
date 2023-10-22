@@ -116,7 +116,7 @@ class LogProcessor {
   private errorFound = false
   private log: (msg: string) => void
   private seenLogs: Set<string> = new Set()
-  private spinner: Ora = ora({color: 'cyan'})
+  private spinner: Ora = ora({color: 'blue'})
 
   constructor(logger: (msg: string) => void) {
     this.log = logger
