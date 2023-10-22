@@ -1,4 +1,5 @@
 import {Args, Command, Flags} from '@oclif/core'
+import chalk from 'chalk'
 import * as chokidar from 'chokidar'
 import {Bedrock} from 'langchain/llms/bedrock'
 import lodash from 'lodash'
@@ -115,11 +116,10 @@ class LogProcessor {
   private errorFound = false
   private log: (msg: string) => void
   private seenLogs: Set<string> = new Set()
-  private spinner: Ora
+  private spinner: Ora = ora({color: 'cyan'})
 
   constructor(logger: (msg: string) => void) {
     this.log = logger
-    this.spinner = ora('Initializing...')
   }
 
   public async processLogs(logs: string[]): Promise<void> {
@@ -176,14 +176,14 @@ class LogProcessor {
     const errors = this.batch.filter((log) => log.includes('|error :'))
     for (const err of errors) {
       this.addSeparator()
-      this.spinner.start(`Processing error: ${err}`)
+      this.spinner.start(chalk.green(`Processing error: ${err}`))
       this.log('\nInvoking Bedrock with: Error detected: ' + err + '\n')
 
       // Fetching error insight one-by-one
       // eslint-disable-next-line no-await-in-loop
       const insight = await this.getBedrockInsight(`Error detected: ${err}`)
 
-      this.spinner.stop()
+      this.spinner.succeed(chalk.green('Finished processing error.'))
       this.log(insight)
     }
 
