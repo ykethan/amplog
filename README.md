@@ -1,7 +1,7 @@
-oclif-hello-world
+oclif-amplog-monitor
 =================
 
-oclif example Hello World CLI
+oclif amplog CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
@@ -18,7 +18,7 @@ $ npm install -g amplog
 $ amplog COMMAND
 running command...
 $ amplog (--version)
-amplog/0.0.0 darwin-arm64 node-v18.18.0
+amplog/3.0.0 darwin-arm64 node-v18.18.0
 $ amplog --help [COMMAND]
 USAGE
   $ amplog COMMAND
@@ -79,7 +79,7 @@ EXAMPLES
   $ amplog monitor
 ```
 
-_See code: [src/commands/monitor.ts](https://github.com/ykethan/amplog/blob/v0.0.0/src/commands/monitor.ts)_
+_See code: [src/commands/monitor.ts](https://github.com/ykethan/amplog/blob/v3.0.0/src/commands/monitor.ts)_
 
 ## `amplog plugins`
 

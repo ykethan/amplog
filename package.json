@@ -21,7 +21,7 @@
     "luxon": "^3.4.3",
     "ora": "^7.0.1"
   },
-  "description": "reads log file for error and suggest mitigation steps",
+  "description": "reads log file for error and calls aws bedrock",
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
     "@oclif/test": "^3.0.2",
@@ -64,8 +64,8 @@
     ],
     "topicSeparator": " ",
     "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
+      "amplog": {
+        "description": "monitor command to monitor log files"
       }
     }
   },
@@ -79,7 +79,7 @@
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md"
   },
-  "version": "0.0.0",
+  "version": "3.0.0",
   "bugs": "https://github.com/ykethan/amplog/issues",
   "keywords": [
     "oclif"
