@@ -27,9 +27,8 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`amplog hello PERSON`](#amplog-hello-person)
-* [`amplog hello world`](#amplog-hello-world)
 * [`amplog help [COMMANDS]`](#amplog-help-commands)
+* [`amplog monitor`](#amplog-monitor)
 * [`amplog plugins`](#amplog-plugins)
 * [`amplog plugins:install PLUGIN...`](#amplog-pluginsinstall-plugin)
 * [`amplog plugins:inspect PLUGIN...`](#amplog-pluginsinspect-plugin)
@@ -39,48 +38,6 @@ USAGE
 * [`amplog plugins:uninstall PLUGIN...`](#amplog-pluginsuninstall-plugin-1)
 * [`amplog plugins:uninstall PLUGIN...`](#amplog-pluginsuninstall-plugin-2)
 * [`amplog plugins update`](#amplog-plugins-update)
-
-## `amplog hello PERSON`
-
-Say hello
-
-```
-USAGE
-  $ amplog hello PERSON -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
-```
-
-_See code: [src/commands/hello/index.ts](https://github.com/ykethan/amplog/blob/v0.0.0/src/commands/hello/index.ts)_
-
-## `amplog hello world`
-
-Say hello world
-
-```
-USAGE
-  $ amplog hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ amplog hello world
-  hello world! (./src/commands/hello/world.ts)
-```
-
-_See code: [src/commands/hello/world.ts](https://github.com/ykethan/amplog/blob/v0.0.0/src/commands/hello/world.ts)_
 
 ## `amplog help [COMMANDS]`
 
@@ -100,7 +57,29 @@ DESCRIPTION
   Display help for amplog.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.19/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.0.3/src/commands/help.ts)_
+
+## `amplog monitor`
+
+Monitors a log file
+
+```
+USAGE
+  $ amplog monitor [-b] [-f <value>] [-h]
+
+FLAGS
+  -b, --beginning     Start reading the log file from the beginning
+  -f, --file=<value>  [default: ~/.amplify/logs/amplify-cli-2023-10-28.log] Path to the log file
+  -h, --help          Show help
+
+DESCRIPTION
+  Monitors a log file
+
+EXAMPLES
+  $ amplog monitor
+```
+
+_See code: [src/commands/monitor.ts](https://github.com/ykethan/amplog/blob/v0.0.0/src/commands/monitor.ts)_
 
 ## `amplog plugins`
 
@@ -123,7 +102,7 @@ EXAMPLES
   $ amplog plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.7.0/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/index.ts)_
 
 ## `amplog plugins:install PLUGIN...`
 
@@ -188,7 +167,7 @@ EXAMPLES
   $ amplog plugins:inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.7.0/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/inspect.ts)_
 
 ## `amplog plugins:install PLUGIN...`
 
@@ -228,7 +207,7 @@ EXAMPLES
   $ amplog plugins:install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.7.0/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/install.ts)_
 
 ## `amplog plugins:link PLUGIN`
 
@@ -242,8 +221,9 @@ ARGUMENTS
   PATH  [default: .] path to plugin
 
 FLAGS
-  -h, --help     Show CLI help.
+  -h, --help      Show CLI help.
   -v, --verbose
+  --[no-]install  Install dependencies after linking the plugin.
 
 DESCRIPTION
   Links a plugin into the CLI for development.
@@ -257,7 +237,7 @@ EXAMPLES
   $ amplog plugins:link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.7.0/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/link.ts)_
 
 ## `amplog plugins:uninstall PLUGIN...`
 
@@ -305,7 +285,7 @@ ALIASES
   $ amplog plugins remove
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.7.0/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/uninstall.ts)_
 
 ## `amplog plugins:uninstall PLUGIN...`
 
@@ -346,5 +326,5 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.7.0/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/update.ts)_
 <!-- commandsstop -->

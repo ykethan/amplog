@@ -1,4 +1,4 @@
-import {Args, Command, Flags} from '@oclif/core'
+import {Command, Flags} from '@oclif/core'
 import chalk from 'chalk'
 import * as chokidar from 'chokidar'
 import {Bedrock} from 'langchain/llms/bedrock'
@@ -7,21 +7,18 @@ const {debounce} = lodash
 import {DateTime} from 'luxon'
 import * as crypto from 'node:crypto'
 import * as fs from 'node:fs'
+import * as os from 'node:os'
 import ora, {Ora} from 'ora'
 
 const bedrockModel = new Bedrock({
-  maxTokens: 150,
+  maxTokens: 300,
   model: 'anthropic.claude-v2',
   region: 'us-east-1',
   stopSequences: [],
-  temperature: 0,
+  temperature: 0.2,
 })
 
 export default class Monitor extends Command {
-  static args = {
-    file: Args.string({description: 'file to read'}),
-  }
-
   static description = 'Monitors a log file'
   static examples = ['<%= config.bin %> <%= command.id %>']
 
@@ -33,7 +30,7 @@ export default class Monitor extends Command {
     }),
     file: Flags.string({
       char: 'f',
-      default: `./${DateTime.now().toFormat('yyyy-MM-dd')}.log`,
+      default: `~/.amplify/logs/amplify-cli-${DateTime.now().toFormat('yyyy-MM-dd')}.log`,
       description: 'Path to the log file',
     }),
     help: Flags.help({char: 'h', description: 'Show help'}),
@@ -44,19 +41,24 @@ export default class Monitor extends Command {
 
   public async run(): Promise<void> {
     const {flags} = await this.parse(Monitor)
-    const logFilePath = flags.file
+    const logFilePath = flags.file.replace(/^~(?=$|\/|\\)/, os.homedir())
 
-    console.log(`Monitoring -> ${logFilePath}`)
+    console.log(`Monitoring/Waiting for -> ${logFilePath}`)
 
-    // Create the file if it doesn't exist
-    if (!fs.existsSync(logFilePath)) {
-      fs.writeFileSync(logFilePath, '')
-      this.log(`File ${logFilePath} does not exist. Created a new one.`)
-    }
+    // Create the file if it doesn't exist, local testing only
+    // if (!fs.existsSync(logFilePath)) {
+    //   fs.writeFileSync(logFilePath, '')
+    //   this.log(`File ${logFilePath} does not exist. Created a new one.`)
+    // }
 
     const initialSize = fs.statSync(logFilePath).size
 
     this.lastFileSize = flags.beginning ? 0 : initialSize
+
+    // Process existing logs immediately if -b flag is used
+    if (flags.beginning) {
+      this.processNewLogEntries(logFilePath)
+    }
 
     // Set up chokidar watcher
     const watcher = chokidar.watch(logFilePath, {
@@ -72,10 +74,15 @@ export default class Monitor extends Command {
     watcher
       .on('add', (path) => {
         this.log(`New log file detected ${path}`)
+        this.processNewLogEntries(path)
       })
       .on('change', (path) => {
         this.log(`Log file changed ${path}`)
         debouncedProcess()
+      })
+      .on('unlink', (path) => {
+        this.log(`Log file deleted ${path}`)
+        this.lastFileSize = 0
       })
   }
 
@@ -104,8 +111,8 @@ export default class Monitor extends Command {
     })
 
     readStream.on('end', async () => {
-      this.lastFileSize = newSize
       await this.filterAndLogErrors(content)
+      this.lastFileSize = newSize
     })
   }
 }
@@ -157,7 +164,7 @@ class LogProcessor {
 
     try {
       const response = await bedrockModel.invoke(
-        `Human: got error ${log} \n what does this mean and what should I do? \n keep the response concise \n\n Assistant:`,
+        `Human: got error ${log} on Amplify CLI \n what does this mean and what should I do? \n keep the response concise \n\n Assistant:`,
       )
 
       this.errorCache.set(errorKey, response)
