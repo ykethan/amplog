@@ -18,7 +18,7 @@ $ npm install -g amplog
 $ amplog COMMAND
 running command...
 $ amplog (--version)
-amplog/3.0.0 darwin-arm64 node-v18.18.0
+amplog/3.0.2 darwin-arm64 node-v18.18.0
 $ amplog --help [COMMAND]
 USAGE
   $ amplog COMMAND
@@ -57,7 +57,7 @@ DESCRIPTION
   Display help for amplog.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.0.3/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.0.5/src/commands/help.ts)_
 
 ## `amplog monitor`
 
@@ -69,7 +69,7 @@ USAGE
 
 FLAGS
   -b, --beginning     Start reading the log file from the beginning
-  -f, --file=<value>  [default: ~/.amplify/logs/amplify-cli-2023-10-28.log] Path to the log file
+  -f, --file=<value>  [default: ~/.amplify/logs/amplify-cli-2023-10-30.log] Path to the log file
   -h, --help          Show help
 
 DESCRIPTION
@@ -79,7 +79,7 @@ EXAMPLES
   $ amplog monitor
 ```
 
-_See code: [src/commands/monitor.ts](https://github.com/ykethan/amplog/blob/v3.0.0/src/commands/monitor.ts)_
+_See code: [src/commands/monitor.ts](https://github.com/ykethan/amplog/blob/v3.0.2/src/commands/monitor.ts)_
 
 ## `amplog plugins`
 
@@ -102,7 +102,7 @@ EXAMPLES
   $ amplog plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.0.1/src/commands/plugins/index.ts)_
 
 ## `amplog plugins:install PLUGIN...`
 
@@ -118,7 +118,8 @@ ARGUMENTS
 FLAGS
   -f, --force    Run yarn install with force flag.
   -h, --help     Show CLI help.
-  -v, --verbose
+  -s, --silent   Silences yarn output.
+  -v, --verbose  Show verbose yarn output.
 
 DESCRIPTION
   Installs a plugin into the CLI.
@@ -167,7 +168,7 @@ EXAMPLES
   $ amplog plugins:inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.0.1/src/commands/plugins/inspect.ts)_
 
 ## `amplog plugins:install PLUGIN...`
 
@@ -183,7 +184,8 @@ ARGUMENTS
 FLAGS
   -f, --force    Run yarn install with force flag.
   -h, --help     Show CLI help.
-  -v, --verbose
+  -s, --silent   Silences yarn output.
+  -v, --verbose  Show verbose yarn output.
 
 DESCRIPTION
   Installs a plugin into the CLI.
@@ -207,7 +209,7 @@ EXAMPLES
   $ amplog plugins:install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.0.1/src/commands/plugins/install.ts)_
 
 ## `amplog plugins:link PLUGIN`
 
@@ -237,7 +239,7 @@ EXAMPLES
   $ amplog plugins:link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.0.1/src/commands/plugins/link.ts)_
 
 ## `amplog plugins:uninstall PLUGIN...`
 
@@ -285,7 +287,7 @@ ALIASES
   $ amplog plugins remove
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.0.1/src/commands/plugins/uninstall.ts)_
 
 ## `amplog plugins:uninstall PLUGIN...`
 
@@ -326,5 +328,5 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v3.9.3/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v4.0.1/src/commands/plugins/update.ts)_
 <!-- commandsstop -->
