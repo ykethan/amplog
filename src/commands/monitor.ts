@@ -51,13 +51,16 @@ export default class Monitor extends Command {
     //   this.log(`File ${logFilePath} does not exist. Created a new one.`)
     // }
 
-    const initialSize = fs.statSync(logFilePath).size
+    // Log file exists check
+    const fileExists = fs.existsSync(logFilePath)
+    if (fileExists) {
+      const initialSize = fs.statSync(logFilePath).size
+      this.lastFileSize = flags.beginning ? 0 : initialSize
 
-    this.lastFileSize = flags.beginning ? 0 : initialSize
-
-    // Process existing logs immediately if -b flag is used
-    if (flags.beginning) {
-      this.processNewLogEntries(logFilePath)
+      // Process existing logs immediately if -b flag is used
+      if (flags.beginning) {
+        this.processNewLogEntries(logFilePath)
+      }
     }
 
     // Set up chokidar watcher
