@@ -4744,10 +4744,10 @@ keyv@^4.0.0:
   dependencies:
     json-buffer "3.0.1"
 
-langchain@^0.0.175:
-  version "0.0.175"
-  resolved "https://registry.yarnpkg.com/langchain/-/langchain-0.0.175.tgz#a63cd1b5daf6995e99cd9b7d97bea4c612c57cd4"
-  integrity sha512-WTe9I16FWFuO+1v2ePwK6Sa+jWpFz6aee2x8YH23JKX816cGrllejs/PMAjZqnifvA9xvS8PTK/y0MLKJZ2FUA==
+langchain@^0.0.180:
+  version "0.0.180"
+  resolved "https://registry.yarnpkg.com/langchain/-/langchain-0.0.180.tgz#8b43fb39b48fad1f606e9532044bde5b70802f62"
+  integrity sha512-/70mZsBAUcGZHiHTEs0pO1+xyVwj4X1FMl2LmTuBv83/+yNYkAJJg5+rLI9u6Obj7ZcsoNmqIPpsOL5rx2yJww==
   dependencies:
     "@anthropic-ai/sdk" "^0.6.2"
     ansi-styles "^5.0.0"
