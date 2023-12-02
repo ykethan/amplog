@@ -24,7 +24,7 @@
   "description": "reads log file for error and calls aws bedrock",
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^3.0.4",
+    "@oclif/test": "^3.1.3",
     "@types/chai": "^4.3.9",
     "@types/luxon": "^3.3.3",
     "@types/mocha": "^10.0.3",
